@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <SupportedPlatform Include="browser" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\css\" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Inputs="Styles\blazewind.pcss" Outputs="wwwroot\css\blazewind.min.css">
+        <Exec Command="npm run build" />
+    </Target>
+
+</Project>

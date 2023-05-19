@@ -1,0 +1,29 @@
+{
+  "name": "blazewind",
+  "version": "1.0.0",
+  "description": "A Blazor components library based on Tailwind CSS and Flowbite.",
+  "main": "index.js",
+  "scripts": {
+    "build": "snowpack build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fuji97/blazewind.git"
+  },
+  "author": "fuji97",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fuji97/blazewind/issues"
+  },
+  "homepage": "https://github.com/fuji97/blazewind#readme",
+  "devDependencies": {
+    "@snowpack/plugin-postcss": "^1.4.3",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23",
+    "snowpack": "^3.8.8",
+    "tailwindcss": "^3.3.2"
+  },
+  "dependencies": {
+    "@microsoft/dotnet-js-interop": "^7.0.5"
+  }
+}
