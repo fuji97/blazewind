@@ -1,0 +1,44 @@
+name: Build Blazewind
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  BLAZEWIND_PROJECT_PATH: ./src/Blazewind/
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    defaults: 
+      run:
+        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
+    
+    strategy: 
+      matrix:
+        dotnet: [ '6.0.x', '7.0.x' ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+      - name: Run NPM CI
+        run: npm ci
+      - name: Run NPM Build
+        run: npm run build --if-present
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
