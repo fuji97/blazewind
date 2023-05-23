@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazewind", "src\Blazewind\Blazewind.csproj", "{D727AC55-A3FA-43FE-A80C-66E32490B8A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazewind.Tests", "tests\Blazewind.Tests\Blazewind.Tests.csproj", "{3E49BEE7-6A0C-4769-95CA-B9675784D0C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{D727AC55-A3FA-43FE-A80C-66E32490B8A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D727AC55-A3FA-43FE-A80C-66E32490B8A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D727AC55-A3FA-43FE-A80C-66E32490B8A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E49BEE7-6A0C-4769-95CA-B9675784D0C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E49BEE7-6A0C-4769-95CA-B9675784D0C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E49BEE7-6A0C-4769-95CA-B9675784D0C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E49BEE7-6A0C-4769-95CA-B9675784D0C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
