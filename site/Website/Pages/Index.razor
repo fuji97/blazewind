@@ -1,0 +1,12 @@
+﻿@page "/"
+
+
+<Button Class="ml-2 mt-2" OnClickAsync="Click">Loading</Button>
+
+@code {
+    Task? _waitTask = null;
+    private async Task Click(MouseEventArgs e) {
+        Console.WriteLine("Click");
+        await Task.Delay(2000);
+    }
+}

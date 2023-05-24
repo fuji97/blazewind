@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>Blazewind.Website</AssemblyName>
+        <RootNamespace>Blazewind.Website</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.4" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Blazewind\Blazewind.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TypeScript\" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Inputs="Styles\blazewind.pcss" Outputs="wwwroot\css\blazewind.min.css">
+        <Exec Command="npm run build" />
+    </Target>
+
+</Project>

@@ -1,0 +1,80 @@
+﻿@using Blazewind.Core.Helpers
+@typeparam T
+
+@switch (_status) {
+    case Status.Waiting:
+        @Waiting
+        break;
+    case Status.Completed:
+        @Completed?.Invoke(_result)
+        break;
+    case Status.Error:
+        @Error?.Invoke(_exception)
+        break;
+}
+
+@code {
+    [Parameter]
+    public Task<T>? Task { get; set; }
+    
+    [Parameter]
+    public RenderFragment? Waiting { get; set; }
+    
+    [Parameter]
+    public RenderFragment<T>? Completed { get; set; }
+    
+    [Parameter]
+    public RenderFragment<Exception>? Error { get; set; }
+    
+    private Status _status = Status.Waiting;
+    private T _result = default!;
+    private Exception _exception = default!;
+
+    public override async Task SetParametersAsync(ParameterView parameters) 
+    {
+        var listenToTask = parameters.AreChanged(this, x => x.Task);
+        
+        await base.SetParametersAsync(parameters);
+        
+        if (listenToTask) ListenToTask();
+        
+    }
+
+    private void ListenToTask() {
+        _status = Status.Waiting;
+
+        try {
+            Task?.ContinueWith(t => {
+                // Ignore if task has been changed
+                if (Task != t) 
+                {
+                    return;
+                }
+                
+                if (t.IsFaulted || t.IsCanceled) 
+                {
+                    _status = Status.Error;
+                    _exception = t.Exception ?? new Exception("Task failed");
+                    InvokeAsync(StateHasChanged);
+                }
+                else if (t.IsCompleted) 
+                {
+                    _status = Status.Completed;
+                    _result = t.Result;
+                    InvokeAsync(StateHasChanged);
+                }
+            });
+        }
+        catch (Exception e) {
+            _status = Status.Error;
+            _exception = e;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+    
+    internal enum Status {
+        Waiting,
+        Completed,
+        Error
+    }
+}

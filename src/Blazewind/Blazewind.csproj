@@ -4,6 +4,14 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Title>Blazewind</Title>
+        <Authors>fuji97</Authors>
+        <Description>A Blazor components library based on Tailwind CSS and Flowbite.</Description>
+        <PackageProjectUrl>https://github.com/fuji97/blazewind</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/fuji97/blazewind/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/fuji97/blazewind</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>tailwindcss blazor</PackageTags>
     </PropertyGroup>
 
 
@@ -16,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Core\Services\" />
       <Folder Include="wwwroot\css\" />
     </ItemGroup>
 
