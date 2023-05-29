@@ -14,4 +14,5 @@ public class ColorPalette {
     public string Info = null!;
     public string Warning = null!;
     public string Danger = null!;
+    public string Background = null!;
 }

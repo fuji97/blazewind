@@ -1,4 +1,7 @@
-﻿@inherits BlazewindDomComponent
+﻿@using Blazewind.Core.Services
+@using Blazewind.Core.Helpers
+@using Blazewind.Core.Themes
+@inherits BlazewindDomComponent
 
 <button type="button" @onclick="@OnClick"
         class="@FullClass">
@@ -6,13 +9,57 @@
 </button>
 
 @code {
+    [Inject] private IThemeProvider ThemeProvider { get; set; } = null!;
+    private ColorPalette LightColors => ThemeProvider.GetTheme().LightColors;
+    private ColorPalette DarkColors => ThemeProvider.GetTheme().DarkColors;
+    
     protected override string BaseClass => "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800";
 
     [Parameter]
     public RenderFragment ChildFragment { get; set; } = null!;
     
     [Parameter]
+    public bool Disabled { get; set; }
+    
+    [Parameter]
+    public ButtonType Type { get; set; } = ButtonType.Default;
+    
+    [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    private string ColorClasses => Type switch {
+        ButtonType.Default => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        ButtonType.Alternative => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        ButtonType.Dark => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        ButtonType.Light => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        ButtonType.Success => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        ButtonType.Info => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        ButtonType.Warning => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        ButtonType.Danger => $"bg-{LightColors.Primary} hover:bg-{LightColors.PrimaryLight} focus:ring-{LightColors.PrimaryDark}/50 dark:bg-{DarkColors.Primary} dark:hover:bg-{DarkColors.PrimaryDark} dark:focus:ring-{DarkColors.Primary}/50",
+        };
+
+    private string TextClasses => Type switch {
+        ButtonType.Default when Disabled => "text-gray-800",
+        ButtonType.Default => "text-white-800",
+        ButtonType.Alternative when Disabled => "text-gray-900 hover:text-blue-700 dark:text-gray-400 dark:hover:text-white",
+        ButtonType.Alternative => "text-gray-900 hover:text-blue-700 dark:text-gray-400 dark:hover:text-white",
+        ButtonType.Dark when Disabled => expr,
+        ButtonType.Dark => expr,
+        ButtonType.Light when Disabled => expr,
+        ButtonType.Light => expr,
+        ButtonType.Success when Disabled => expr,
+        ButtonType.Success => expr,
+        ButtonType.Info when Disabled => expr,
+        ButtonType.Info => expr,
+        ButtonType.Warning when Disabled => expr,
+        ButtonType.Warning => expr,
+        ButtonType.Danger when Disabled => expr,
+        ButtonType.Danger => expr,
+        
+        };
+
+    // private string BuildColorClasses(string text, string lightBg, string lightHover, string darkBg, string darkHover, string lightRing, string darkRing) => 
+    //     $"text-{text} bg-{lightBg} hover:bg-{lightHover} focus:ring-{lightRing} dark:bg-{darkBg} dark:hover:bg-{darkHover} dark:focus:ring-{darkRing}";
 
     protected override void OnParametersSet() {
         base.OnParametersSet();
