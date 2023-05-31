@@ -1,4 +1,4 @@
-﻿namespace Blazewind.Core.Helpers;
+﻿namespace Blazewind.Core.Models;
 
 public enum ButtonType 
 {

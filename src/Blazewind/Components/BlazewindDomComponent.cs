@@ -9,7 +9,7 @@ public abstract class BlazewindDomComponent : BlazewindComponent {
     
     public BlazewindDomComponent() {
         // ReSharper disable once VirtualMemberCallInConstructor
-        ClassBuilder = new ClassBuilder(BaseClass);
+        ClassBuilder = new ClassBuilder();
     }
 
     /// <summary>
@@ -29,7 +29,6 @@ public abstract class BlazewindDomComponent : BlazewindComponent {
 
     private void SetClass(string @class) {
         Class = @class;
-        ClassBuilder.UserClass = @class;
     }
 
     private void SetStyle(string style) {
