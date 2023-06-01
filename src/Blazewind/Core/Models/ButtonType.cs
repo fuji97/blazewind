@@ -1,6 +1,6 @@
 ﻿namespace Blazewind.Core.Models;
 
-public enum ButtonType 
+public enum ButtonType
 {
     Default,
     Alternative,

@@ -1,8 +1,9 @@
 ﻿using System.Linq.Expressions;
-namespace Blazewind.Core.Helpers; 
+namespace Blazewind.Core.Helpers;
 
-public static class ExpressionUtils {
-    public static MemberExpression GetMemberExpression<T>(Expression<Func<T,object>> expr) 
+public static class ExpressionUtils
+{
+    public static MemberExpression GetMemberExpression<T>(Expression<Func<T, object?>> expr)
     {
         MemberExpression? me;
         switch (expr.Body.NodeType)
@@ -15,8 +16,9 @@ public static class ExpressionUtils {
                 me = expr.Body as MemberExpression;
                 break;
         }
-        
-        if (me is null) {
+
+        if (me is null)
+        {
             throw new ArgumentException($"Expression '{expr}' must be a member expression");
         }
 

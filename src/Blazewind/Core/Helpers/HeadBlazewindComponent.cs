@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
-namespace Blazewind.Core.Helpers; 
+namespace Blazewind.Core.Helpers;
 
-public class HeadBlazewindComponent : IComponent {
+public class HeadBlazewindComponent : IComponent
+{
     private RenderHandle _renderHandle;
-    
+
     public void Attach(RenderHandle renderHandle)
         => _renderHandle = renderHandle;
 

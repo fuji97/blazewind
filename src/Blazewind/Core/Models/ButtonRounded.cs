@@ -1,6 +1,6 @@
-﻿namespace Blazewind.Core.Models; 
+﻿namespace Blazewind.Core.Models;
 
-public enum ButtonRoundness 
+public enum ButtonRoundness
 {
     Default,
     Full

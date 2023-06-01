@@ -32,11 +32,12 @@
 
     public override async Task SetParametersAsync(ParameterView parameters) 
     {
+        var listenToTask = parameters.AreChanged(this, x => x.Task);
+        
         await base.SetParametersAsync(parameters);
-        if (parameters.AreChanged(this, x => x.Task)) 
-        {
-            ListenToTask();
-        }
+        
+        if (listenToTask) ListenToTask();
+        
     }
 
     private void ListenToTask() {

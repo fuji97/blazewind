@@ -17,4 +17,12 @@
       <ProjectReference Include="..\..\src\Blazewind\Blazewind.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="TypeScript\" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Inputs="Styles\blazewind.pcss" Outputs="wwwroot\css\blazewind.min.css">
+        <Exec Command="npm run build" />
+    </Target>
+
 </Project>

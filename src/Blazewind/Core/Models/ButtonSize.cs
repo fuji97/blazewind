@@ -1,6 +1,6 @@
 ﻿namespace Blazewind.Core.Models;
 
-public enum ButtonSize 
+public enum ButtonSize
 {
     ExtraSmall,
     Small,
