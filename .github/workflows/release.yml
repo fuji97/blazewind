@@ -17,7 +17,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs: 
-      semantic-version: ${{ steps.get-version.outputs }}
+      version-type: ${{ steps.get-version.outputs.version-type }}
       version-string: ${{ steps.version-string.outputs }}
     steps:
       - name: Checkout
@@ -98,7 +98,7 @@ jobs:
   release-nuget:
     runs-on: ubuntu-latest
     needs: [build, run-test]
-    if: needs.build.outputs.semantic-version.version_type != 'none'
+    if: needs.build.outputs.version_type != 'none'
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v3
@@ -117,7 +117,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     needs: [build, run-test, release-nuget]
-    if: needs.build.outputs.semantic-version.version_type != 'none'
+    if: needs.build.outputs.version_type != 'none'
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v3
