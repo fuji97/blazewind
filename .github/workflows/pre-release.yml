@@ -1,22 +1,9 @@
-﻿name: release
+name: pre-release
 
 on:
-  workflow_dispatch: 
-    inputs:
-      type:
-        description: 'Release type'
-        required: true
-        type: choice
-        options:
-          - 'manual'
-          - 'major'
-          - 'minor'
-          - 'patch'
-        default: 'none'
-      version:
-        description: 'Version to release'
-        required: false
-        
+  push:
+    branches: [ "main" ]
+
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
@@ -26,23 +13,22 @@ env:
   NAMESPACE: fuji97
   REPO: fuji97/blazewind
 
-        
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.new-version.outputs.version }}
+    outputs: 
+      version: ${{ steps.current-version.outputs.version }}-${{ github.run_number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Get version
-        id: new-version
-        uses: ./.github/actions/get-version/
+        id: current-version
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
         with:
-            type: ${{ github.event.inputs.type }}
-            version: ${{ github.event.inputs.version }}
+          prefix: 'v'
+          fallback: 0.0.1
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -59,14 +45,14 @@ jobs:
         run: dotnet test --no-restore --configuration Release
       - name: Pack package
         working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
-        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.new-version.outputs.version }}
+        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.current-version.outputs.version }}-${{ github.run_number }}
       - name: Publish artifacts
         uses: actions/upload-artifact@v3
         with:
           name: blazewind
           path: ${{ env.PACKAGES_PATH }}
           retention-days: 30
-
+  
   release-packages:
     runs-on: ubuntu-latest
     needs: [ build ]
@@ -86,39 +72,3 @@ jobs:
           for file in $(find "${{ env.PACKAGES_PATH }}" -type f -name "*.nupkg"); do
               dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source github --skip-duplicate
           done
-
-  release-nuget:
-    runs-on: ubuntu-latest
-    needs: [ build ]
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: blazewind
-          path: ${{ env.PACKAGES_PATH }}
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
-      - name: Publish NuGet package
-        shell: bash
-        run: |
-          for file in $(find "${{ env.PACKAGES_PATH }}" -type f -name "*.nupkg"); do
-              dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-          done
-
-  create-release:
-    runs-on: ubuntu-latest
-    needs: [ build ]
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: blazewind
-
-      - name: Create release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          automatic_release_tag: "v${{ needs.build.outputs.version }}"
