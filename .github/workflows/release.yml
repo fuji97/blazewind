@@ -68,6 +68,8 @@ jobs:
           retention-days: 30
 
   release-packages:
+    permissions:
+      packages: write
     runs-on: ubuntu-latest
     needs: [ build ]
     steps:
