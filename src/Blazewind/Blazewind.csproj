@@ -8,7 +8,7 @@
         <Authors>fuji97</Authors>
         <Description>A Blazor components library based on Tailwind CSS and Flowbite.</Description>
         <PackageProjectUrl>https://github.com/fuji97/blazewind</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/fuji97/blazewind/blob/main/LICENSE</PackageLicenseUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/fuji97/blazewind</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>tailwindcss blazor</PackageTags>
