@@ -1,0 +1,25 @@
+﻿name: 'Get version string'
+description: 'Get version string'
+inputs:
+  semantic-version-output:
+    description: 'Semantic version output'
+    required: true
+outputs:
+  version:
+    description: 'Version string'
+    required: true
+    value: ${{ steps.build-version.outputs.version }}
+runs:
+  using: "composite"
+  defaults:
+    run:
+      shell: bash
+  steps:
+    - name: Build Version Variable
+      id: build-version
+      run: |
+        if [ "${{ inputs.semantic-version-output.version_type }}" != "none" ]; then
+          echo "version=${{ inputs.semantic-version-output.major }}.${{ inputs.semantic-version-output.minor }}.${{ inputs.semantic-version-output.patch }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${{ inputs.semantic-version-output.major }}.${{ inputs.semantic-version-output.minor }}.${{ inputs.semantic-version-output.patch }}-${{ inputs.semantic-version-output.increment }}"  >> $GITHUB_OUTPUT
+        fi

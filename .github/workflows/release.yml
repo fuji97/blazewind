@@ -1,47 +1,132 @@
-name: Release NuGet package
+name: release
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
   BLAZEWIND_PROJECT_PATH: ./src/Blazewind/
+  PACKAGES_PATH: ${{ github.workspace}}/nuget
+  USERNAME: fuji97
+  NAMESPACE: fuji97
+  REPO: fuji97/blazewind
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    defaults:
-      run:
-        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
-    
-    strategy:
-      matrix:
-        dotnet: [ '6.0.x', '7.0.x' ]
-
+    outputs: 
+      semantic-version: ${{ steps.get-version.outputs }}
+      version-string: ${{ steps.version-string.outputs }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: '${{ env.BLAZEWIND_PROJECT_PATH }}/package-lock.json'
-      - name: Run NPM CI
-        run: npm ci
-      - name: Run NPM Build
-        run: npm run build --if-present
+          fetch-depth: 0
+      - name: Get version
+        id: get-version
+        uses: paulhatch/semantic-version@v5.0.3
+        with:
+          tag_prefix: "v"
+          enable_prerelease_mode: true
+          version_format: "${major}.${minor}.${patch}-${increment}"
+      - name: Get version string
+        id: version-string
+        uses: ./.github/actions/get-version-string/
+        with:
+          semantic-version-output: ${{ steps.get-version.outputs }}
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: ${{ matrix.dotnet }}
+          cache: true
+          dotnet-version: '7.0.x'
+      - name: Restore NPM
+        uses: ./.github/actions/restore-npm/
+        with:
+          path: ${{ env.BLAZEWIND_PROJECT_PATH }}
       - name: Restore dependencies
+        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
         run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
+      - name: Pack package
+        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
+        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.version-string.outputs.version }}
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: blazewind
+          path: ${{ env.BLAZEWIND_BUILD_PATH }}
+          retention-days: 30
+          
+  run-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          cache: true
+          dotnet-version: '7.0.x'
+      - name: Restore NPM
+        uses: ./.github/actions/restore-npm/
+        with:
+          path: ${{ env.BLAZEWIND_PROJECT_PATH }}
+      - name: Run tests
+        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
+        run: dotnet test --configuration Release
+  
+  release-packages:
+    runs-on: ubuntu-latest
+    needs: [build, run-test]
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: blazewind
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          cache: true
+          dotnet-version: '7.0.x'
+      - name: Publish NuGet package
+        run: |
+          dotnet nuget add source --username ${{ env.USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ env.NAMESPACE }}/index.json"
+          foreach($file in (Get-ChildItem "${{ env.PACKAGES_PATH }}" -Recurse -Include *.nupkg)) {
+              dotnet nuget push $file --source github --skip-duplicate
+          }
+
+  release-nuget:
+    runs-on: ubuntu-latest
+    needs: [build, run-test]
+    if: needs.build.outputs.semantic-version.version_type != 'none'
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: blazewind
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+      - name: Publish NuGet package
+        run: |
+          foreach($file in (Get-ChildItem "${{ env.PACKAGES_PATH }}" -Recurse -Include *.nupkg)) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
+          
+  create-release:
+    runs-on: ubuntu-latest
+    needs: [build, run-test, release-nuget]
+    if: needs.build.outputs.semantic-version.version_type != 'none'
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: blazewind
+
+      - name: Create release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: "v${{ needs.build.outputs.version-string.version }}"
