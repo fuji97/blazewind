@@ -17,7 +17,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs: 
-      version: ${{ steps.current-version.outputs.version }}-${{ github.run_number }}
+      version: ${{ steps.current-version.outputs.tag }}-${{ github.run_number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -45,7 +45,7 @@ jobs:
         run: dotnet test --no-restore --configuration Release
       - name: Pack package
         working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
-        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.current-version.outputs.version }}-${{ github.run_number }}
+        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.current-version.outputs.tag }}-${{ github.run_number }}
       - name: Publish artifacts
         uses: actions/upload-artifact@v3
         with:
