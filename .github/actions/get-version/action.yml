@@ -27,8 +27,8 @@ runs:
     - if: ${{ inputs.choice }} == 'manual'
       shell: bash
       run: |
-        if [[ -n "${{ input.version }}" ]]; then
-          echo "version=${{ input.version }}"
+        if [[ -n "${{ inputs.version }}" ]]; then
+          echo "version=${{ inputs.version }}"
         else
           echo "No version provided. Please provide a version."
           exit 1
