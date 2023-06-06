@@ -17,8 +17,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs: 
-      version-type: ${{ steps.get-version.outputs.version-type }}
-      version-string: ${{ steps.version-string.outputs }}
+      version_type: ${{ steps.get-version.outputs.version_type }}
+      version_string: ${{ steps.version-string.outputs }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -43,7 +43,6 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          cache: true
           dotnet-version: '7.0.x'
       - name: Restore NPM
         uses: ./.github/actions/restore-npm/
@@ -57,7 +56,7 @@ jobs:
         run: dotnet test --no-restore --configuration Release
       - name: Pack package
         working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
-        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.version-string.outputs.version }}
+        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.version_string.outputs.version }}
       - name: Publish artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -76,7 +75,6 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          cache: true
           dotnet-version: '7.0.x'
       - name: Publish NuGet package
         run: |
@@ -119,4 +117,4 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          automatic_release_tag: "v${{ needs.build.outputs.version-string.version }}"
+          automatic_release_tag: "v${{ needs.build.outputs.version_string.version }}"
