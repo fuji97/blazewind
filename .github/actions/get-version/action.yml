@@ -13,7 +13,7 @@ inputs:
 outputs:
   version:
     description: 'Version string'
-    value: ${{ job.outputs.version }}
+    value: ${{ steps.merge_version.outputs.version }}
     
 runs: 
     using: "composite"
@@ -29,6 +29,7 @@ runs:
         prefix: 'v'
         fallback: 0.0.1
     - if: ${{ inputs.choice == 'manual' }}
+      id: force_version
       shell: bash
       run: |
         if [[ -n "${{ inputs.version }}" ]]; then
@@ -56,4 +57,12 @@ runs:
         else
           echo "Invalid type provided. Please choose either 'major', 'minor', or 'patch'."
           exit 1
+        fi
+    - id: merge_version
+      shell: bash
+      run: |
+        if [[ -n "${{ steps.force_version.outputs.version }}" ]]; then
+          echo "version=${{ steps.force_version.outputs.version }}"
+        else
+          echo "version=${{ steps.determine_version.outputs.version }}"
         fi
