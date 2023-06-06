@@ -28,7 +28,7 @@ runs:
       with:
         prefix: 'v'
         fallback: 0.0.1
-    - if: ${{ inputs.choice }} == 'manual'
+    - if: ${{ inputs.choice == 'manual' }}
       shell: bash
       run: |
         if [[ -n "${{ inputs.version }}" ]]; then
@@ -37,13 +37,13 @@ runs:
           echo "No version provided. Please provide a version."
           exit 1
         fi
-    - if: ${{ inputs.choice }} != 'manual'
+    - if: ${{ inputs.choice != 'manual' }} 
       uses: WyriHaximus/github-action-next-semvers@v1
       id: semvers
       with:
         version: ${{ steps.previoustag.outputs.tag }}
     - name: Determine version
-      if: ${{ inputs.choice }} != 'manual'
+      if: ${{ inputs.choice != 'manual' }} 
       id: determine_version
       shell: bash
       run: |
