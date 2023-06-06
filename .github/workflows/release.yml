@@ -12,7 +12,7 @@ on:
           - 'major'
           - 'minor'
           - 'patch'
-        default: 'none'
+        default: 'manual'
       version:
         description: 'Version to release'
         required: false

@@ -18,6 +18,10 @@ outputs:
 runs: 
     using: "composite"
     steps:
+    - shell: bash
+      run: |
+        echo "Choice: ${{ inputs.choice }}"
+        echo "Version: ${{ inputs.version }}"
     - name: Get version
       id: previoustag
       uses: WyriHaximus/github-action-get-previous-tag@v1
