@@ -22,10 +22,7 @@ env:
   DOTNET_NOLOGO: true
   BLAZEWIND_PROJECT_PATH: ./src/Blazewind/
   PACKAGES_PATH: ${{ github.workspace }}/nuget
-  USERNAME: fuji97
-  NAMESPACE: fuji97
-  REPO: fuji97/blazewind
-
+  NAMESPACE: ${{ github.repository_owner }}
         
 jobs:
   build:
@@ -84,9 +81,8 @@ jobs:
           dotnet-version: '7.0.x'
       - name: Publish NuGet package
         run: |
-          dotnet nuget add source --username ${{ env.USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ env.NAMESPACE }}/index.json"
           for file in $(find "${{ env.PACKAGES_PATH }}" -type f -name "*.nupkg"); do
-              dotnet nuget push $file --api-key "${{ secrets.GITHUB_TOKEN }}" --source github --skip-duplicate
+            dotnet nuget push $file --api-key "${{ secrets.GITHUB_TOKEN }}" --source "https://nuget.pkg.github.com/${{ env.NAMESPACE }}/index.json" --skip-duplicate
           done
 
   release-nuget:
@@ -106,7 +102,7 @@ jobs:
         shell: bash
         run: |
           for file in $(find "${{ env.PACKAGES_PATH }}" -type f -name "*.nupkg"); do
-              dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+            dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done
 
   create-release:
