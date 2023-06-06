@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs: 
       version_type: ${{ steps.get-version.outputs.version_type }}
-      version_string: ${{ steps.version-string.outputs }}
+      version_string: ${{ steps.version-string.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
