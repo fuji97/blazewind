@@ -18,6 +18,8 @@ runs:
     - name: Run NPM CI
       working-directory: ${{ inputs.path }}
       run: npm ci
+      shell: bash
     - name: Run NPM Build
       working-directory: ${{ inputs.path }}
       run: npm run build --if-present
+      shell: bash
