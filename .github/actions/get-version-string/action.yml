@@ -27,8 +27,11 @@ runs:
       id: build-version
       shell: bash
       run: |
+        echo "Version type: ${{ inputs.version_type }}"
         if [ "${{ inputs.version_type }}" != "none" ]; then
+          echo "Version: ${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}"
           echo "version=${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}" >> $GITHUB_OUTPUT
         else
+          echo "Version: ${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}-${{ inputs.increment }}"
           echo "version=${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}-${{ inputs.increment }}"  >> $GITHUB_OUTPUT
         fi

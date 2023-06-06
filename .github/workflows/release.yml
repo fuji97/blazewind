@@ -92,6 +92,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: blazewind
+          path: ${{ env.PACKAGES_PATH }}
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -118,4 +119,4 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          automatic_release_tag: "v${{ needs.build.outputs.version_string.version }}"
+          automatic_release_tag: "v${{ needs.build.outputs.version-string.version }}"
