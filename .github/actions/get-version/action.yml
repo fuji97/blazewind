@@ -11,9 +11,9 @@ inputs:
     required: false
     
 outputs:
-    version:
-        description: 'Version string'
-        value: ${{ steps.determine_version.outputs.version }}
+  version:
+    description: 'Version string'
+    value: ${{ job.outputs.version }}
     
 runs: 
     using: "composite"
