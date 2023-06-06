@@ -33,7 +33,7 @@ runs:
       shell: bash
       run: |
         if [[ -n "${{ inputs.version }}" ]]; then
-          echo "version=${{ inputs.version }}"
+          echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
         else
           echo "No version provided. Please provide a version."
           exit 1
@@ -62,7 +62,7 @@ runs:
       shell: bash
       run: |
         if [[ -n "${{ steps.force_version.outputs.version }}" ]]; then
-          echo "version=${{ steps.force_version.outputs.version }}"
+          echo "version=${{ steps.force_version.outputs.version }}" >> $GITHUB_OUTPUT
         else
-          echo "version=${{ steps.determine_version.outputs.version }}"
+          echo "version=${{ steps.determine_version.outputs.version }}" >> $GITHUB_OUTPUT
         fi
