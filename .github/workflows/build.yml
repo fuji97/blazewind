@@ -19,9 +19,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      semantic-version: ${{ steps.get-version.outputs }}
-      version-string: ${{ steps.version_string.outputs }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -1,0 +1,68 @@
+﻿name: Get version
+description: 'Get version'
+
+inputs: 
+  choice:
+    description: 'Release type'
+    required: true
+    default: 'manual'
+  version:
+    description: 'Version to release'
+    required: false
+    
+outputs:
+  version:
+    description: 'Version string'
+    value: ${{ steps.merge_version.outputs.version }}
+    
+runs: 
+    using: "composite"
+    steps:
+    - shell: bash
+      run: |
+        echo "Choice: ${{ inputs.choice }}"
+        echo "Version: ${{ inputs.version }}"
+    - name: Get version
+      id: previoustag
+      uses: WyriHaximus/github-action-get-previous-tag@v1
+      with:
+        prefix: 'v'
+        fallback: 0.0.1
+    - if: ${{ inputs.choice == 'manual' }}
+      id: force_version
+      shell: bash
+      run: |
+        if [[ -n "${{ inputs.version }}" ]]; then
+          echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "No version provided. Please provide a version."
+          exit 1
+        fi
+    - if: ${{ inputs.choice != 'manual' }} 
+      uses: WyriHaximus/github-action-next-semvers@v1
+      id: semvers
+      with:
+        version: ${{ steps.previoustag.outputs.tag }}
+    - name: Determine version
+      if: ${{ inputs.choice != 'manual' }} 
+      id: determine_version
+      shell: bash
+      run: |
+        if [[ "${{ inputs.type }}" == "major" ]]; then
+          echo "version=${{ steps.semvers.outputs.major }}" >> $GITHUB_OUTPUT
+        elif [[ "${{ inputs.type }}" == "minor" ]]; then
+          echo "version=${{ steps.semvers.outputs.minor }}" >> $GITHUB_OUTPUT
+        elif [[ "${{ inputs.type }}" == "patch" ]]; then
+          echo "version=${{ steps.semvers.outputs.patch }}" >> $GITHUB_OUTPUT
+        else
+          echo "Invalid type provided. Please choose either 'major', 'minor', or 'patch'."
+          exit 1
+        fi
+    - id: merge_version
+      shell: bash
+      run: |
+        if [[ -n "${{ steps.force_version.outputs.version }}" ]]; then
+          echo "version=${{ steps.force_version.outputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${{ steps.determine_version.outputs.version }}" >> $GITHUB_OUTPUT
+        fi
