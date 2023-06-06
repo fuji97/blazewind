@@ -8,7 +8,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
   BLAZEWIND_PROJECT_PATH: ./src/Blazewind/
-  PACKAGES_PATH: ${{ github.workspace}}/nuget
+  PACKAGES_PATH: ${{ github.workspace }}/nuget
   USERNAME: fuji97
   NAMESPACE: fuji97
   REPO: fuji97/blazewind
@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: blazewind
-          path: ${{ env.BLAZEWIND_BUILD_PATH }}
+          path: ${{ env.PACKAGES_PATH }}
           retention-days: 30
   
   release-packages:
