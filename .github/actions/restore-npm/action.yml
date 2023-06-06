@@ -1,0 +1,23 @@
+﻿name: 'Restore NPM'
+description: 'Restore NPM dependencies'
+
+inputs:
+  path:
+    description: 'Project path'
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: '${{ inputs.path }}/package-lock.json'
+    - name: Run NPM CI
+      working-directory: ${{ inputs.path }}
+      run: npm ci
+    - name: Run NPM Build
+      working-directory: ${{ inputs.path }}
+      run: npm run build --if-present

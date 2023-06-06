@@ -1,0 +1,59 @@
+﻿name: build
+
+on:
+  push:
+    branches: 
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  BLAZEWIND_PROJECT_PATH: ./src/Blazewind/
+  PACKAGES_PATH: ${{ github.workspace}}/nuget
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      semantic-version: ${{ steps.get-version.outputs }}
+      version-string: ${{ steps.version_string.outputs }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+      - name: Restore NPM
+        uses: ./.github/actions/restore-npm/
+        with:
+          path: ${{ env.BLAZEWIND_PROJECT_PATH }}
+      - name: Restore dependencies
+        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
+        run: dotnet restore
+      - name: Run tests
+        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
+        run: dotnet test --no-restore -c Release
+      - name: Get version
+        id: get-version
+        uses: paulhatch/semantic-version@v5.0.3
+        with:
+          tag_prefix: "v"
+          enable_prerelease_mode: true
+          version_format: "${major}.${minor}.${patch}-${increment}"
+      - name: Pack package
+        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
+        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.get-version.outputs.version }}
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: blazewind
+          path: ${{ env.PACKAGES_PATH }}
+          retention-days: 30
