@@ -7,16 +7,13 @@ inputs:
 outputs:
   version:
     description: 'Version string'
-    required: true
     value: ${{ steps.build-version.outputs.version }}
 runs:
   using: "composite"
-  defaults:
-    run:
-      shell: bash
   steps:
     - name: Build Version Variable
       id: build-version
+      shell: bash
       run: |
         if [ "${{ inputs.semantic-version-output.version_type }}" != "none" ]; then
           echo "version=${{ inputs.semantic-version-output.major }}.${{ inputs.semantic-version-output.minor }}.${{ inputs.semantic-version-output.patch }}" >> $GITHUB_OUTPUT
