@@ -1,8 +1,20 @@
 ﻿name: 'Get version string'
 description: 'Get version string'
 inputs:
-  semantic-version-output:
-    description: 'Semantic version output'
+  version_type:
+    description: 'Version type'
+    required: true
+  major:
+    description: 'Major version'
+    required: true
+  minor:
+    description: 'Minor version'
+    required: true
+  patch:
+    description: 'Minor version'
+    required: true
+  increment:
+    description: 'Minor version'
     required: true
 outputs:
   version:
@@ -15,8 +27,8 @@ runs:
       id: build-version
       shell: bash
       run: |
-        if [ "${{ inputs.semantic-version-output.version_type }}" != "none" ]; then
-          echo "version=${{ inputs.semantic-version-output.major }}.${{ inputs.semantic-version-output.minor }}.${{ inputs.semantic-version-output.patch }}" >> $GITHUB_OUTPUT
+        if [ "${{ inputs.version_type }}" != "none" ]; then
+          echo "version=${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}" >> $GITHUB_OUTPUT
         else
-          echo "version=${{ inputs.semantic-version-output.major }}.${{ inputs.semantic-version-output.minor }}.${{ inputs.semantic-version-output.patch }}-${{ inputs.semantic-version-output.increment }}"  >> $GITHUB_OUTPUT
+          echo "version=${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}-${{ inputs.increment }}"  >> $GITHUB_OUTPUT
         fi
