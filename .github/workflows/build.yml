@@ -40,9 +40,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
+        run: dotnet build -c Release --no-restore /p:ContinuousIntegrationBuild=true
       - name: Run tests
-        run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-build --verbosity normal -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: Get version
         id: current-version
         uses: ./.github/actions/current-version/
