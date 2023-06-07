@@ -62,7 +62,9 @@ runs:
       shell: bash
       run: |
         if [[ -n "${{ steps.force_version.outputs.version }}" ]]; then
-          echo "version=${{ steps.force_version.outputs.version }}" >> $GITHUB_OUTPUT
+          version="${{ steps.force_version.outputs.version }}"
         else
-          echo "version=${{ steps.determine_version.outputs.version }}" >> $GITHUB_OUTPUT
+          version="${{ steps.determine_version.outputs.version }}"
         fi
+        version="${version#v}"
+        echo "version=${version}" >> $GITHUB_OUTPUT
