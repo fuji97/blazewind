@@ -33,11 +33,11 @@ jobs:
         with:
           path: ${{ env.BLAZEWIND_PROJECT_PATH }}
       - name: Restore dependencies
-        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
         run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
       - name: Run tests
-        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
-        run: dotnet test --no-restore -c Release
+        run: dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: Get version
         id: current-version
         uses: ./.github/actions/current-version/
