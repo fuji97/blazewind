@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 
@@ -28,12 +28,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.4" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Core\Services\" />
-      <Folder Include="wwwroot\css\" />
-    </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Inputs="Styles\blazewind.pcss" Outputs="wwwroot\css\blazewind.min.css">
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Inputs="Styles\blazewind.css" Outputs="wwwroot\css\blazewind.css">
         <Exec Command="npm run build" />
     </Target>
 

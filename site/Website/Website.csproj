@@ -21,7 +21,7 @@
       <Folder Include="TypeScript\" />
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Inputs="Styles\blazewind.pcss" Outputs="wwwroot\css\blazewind.min.css">
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Inputs="Styles\app.css" Outputs="wwwroot\dist\css\app.css">
         <Exec Command="npm run build" />
     </Target>
 
