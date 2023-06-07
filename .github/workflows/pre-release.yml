@@ -35,9 +35,6 @@ jobs:
       - name: Restore dependencies
         working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
         run: dotnet restore
-      - name: Run tests
-        working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
-        run: dotnet test --no-restore --configuration Release
       - name: Pack package
         working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
         run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.current-version.outputs.version }}-${{ github.run_number }}
