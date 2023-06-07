@@ -14,6 +14,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
   BLAZEWIND_PROJECT_PATH: ./src/Blazewind/
+  WEBSITE_PROJECT_PATH: ./site/Website/
   PACKAGES_PATH: ${{ github.workspace}}/nuget
 
 jobs:
@@ -28,10 +29,14 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
-      - name: Restore NPM
+      - name: Restore Blazewind NPM dependencies
         uses: ./.github/actions/restore-npm/
         with:
           path: ${{ env.BLAZEWIND_PROJECT_PATH }}
+      - name: Restore Website NPM dependencies
+        uses: ./.github/actions/restore-npm/
+        with:
+          path: ${{ env.WEBSITE_PROJECT_PATH }}
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
