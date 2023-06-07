@@ -13,6 +13,12 @@ public abstract class BlazewindDomComponent : BlazewindComponent
         // ReSharper disable once VirtualMemberCallInConstructor
         ClassBuilder = new ClassBuilder();
     }
+    
+    /// <summary>
+    /// Set the component as custom, which means that the default class and style properties will not be used.
+    /// </summary>
+    [Parameter]
+    public bool Custom { get; set; } = false;
 
     /// <summary>
     /// Specifies one or more class names for an DOM element.

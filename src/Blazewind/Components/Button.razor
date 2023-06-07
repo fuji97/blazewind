@@ -20,9 +20,6 @@
     protected override string BaseClass => "focus:ring-4 font-medium mr-2 mb-2 focus:outline-none";
 
     [Parameter]
-    public bool Custom { get; set; } = false;
-
-    [Parameter]
     public RenderFragment ChildContent { get; set; } = null!;
 
     [Parameter]
