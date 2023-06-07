@@ -16,6 +16,7 @@
 
 @code {
     private string _finalClass = string.Empty;
+    private readonly ClassBuilder _classBuilder = new();
 
     protected override string BaseClass => "focus:ring-4 font-medium mr-2 mb-2 focus:outline-none";
 
@@ -104,9 +105,9 @@
     private string FlexClasses => "inline-flex items-center";
 
     private void BuildClasses() {
-        ClassBuilder.Clear();
+        _classBuilder.Clear();
         if (!Custom) {
-            ClassBuilder
+            _classBuilder
                 .Add(BaseClass)
                 .Add(SizeClasses)
                 .Add(RoundClasses)
@@ -115,9 +116,9 @@
                 .AddIf(IsDisabled, DisabledClasses);
         }
 
-        ClassBuilder.Add(Class);
+        _classBuilder.Add(Class);
 
-        _finalClass = ClassBuilder.ToString();
+        _finalClass = _classBuilder.ToString();
     }
     
     private async Task Click(MouseEventArgs args) {

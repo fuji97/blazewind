@@ -6,14 +6,6 @@ public abstract class BlazewindDomComponent : BlazewindComponent
 {
     protected virtual string BaseClass => String.Empty;
 
-    protected ClassBuilder ClassBuilder { get; }
-
-    public BlazewindDomComponent()
-    {
-        // ReSharper disable once VirtualMemberCallInConstructor
-        ClassBuilder = new ClassBuilder();
-    }
-    
     /// <summary>
     /// Set the component as custom, which means that the default class and style properties will not be used.
     /// </summary>
@@ -31,9 +23,6 @@ public abstract class BlazewindDomComponent : BlazewindComponent
     /// </summary>
     [Parameter]
     public string Style { get; set; } = string.Empty;
-
-
-    protected string FullClass => ClassBuilder.ToString();
 
     private void SetClass(string @class)
     {
