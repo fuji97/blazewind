@@ -39,15 +39,11 @@ jobs:
         working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
         run: dotnet test --no-restore -c Release
       - name: Get version
-        id: get-version
-        uses: paulhatch/semantic-version@v5.0.3
-        with:
-          tag_prefix: "v"
-          enable_prerelease_mode: true
-          version_format: "${major}.${minor}.${patch}-${increment}"
+        id: current-version
+        uses: ./.github/actions/current-version/
       - name: Pack package
         working-directory: ${{ env.BLAZEWIND_PROJECT_PATH }}
-        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.get-version.outputs.version }}
+        run: dotnet pack --no-restore -c Release -o ${{ env.PACKAGES_PATH }} -p:Version=${{ steps.current-version.outputs.version }}
       - name: Publish artifacts
         uses: actions/upload-artifact@v3
         with:

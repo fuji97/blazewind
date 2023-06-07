@@ -1,0 +1,22 @@
+﻿name: Get version
+description: 'Get version'
+
+outputs:
+  version:
+    description: 'Version string'
+    value: ${{ steps.format_version.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get version
+      id: previous_tag
+      uses: WyriHaximus/github-action-get-previous-tag@v1
+      with:
+        prefix: 'v'
+        fallback: 0.0.1
+    - id: format_version
+      shell: bash
+      run: |
+        version="${{ steps.previous_tag.outputs.tag }}"
+        echo "version=${version#v}" >> $GITHUB_OUTPUT

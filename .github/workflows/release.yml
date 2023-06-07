@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 0
       - name: Get version
         id: new-version
-        uses: ./.github/actions/get-version/
+        uses: ./.github/actions/get-release-version/
         with:
             choice: ${{ github.event.inputs.type }}
             version: ${{ github.event.inputs.version }}
